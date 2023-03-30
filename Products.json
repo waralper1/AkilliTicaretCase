@@ -1,0 +1,28 @@
+[
+  {
+    "Gorsel": "https://example.com/image1.jpg",
+    "Stokkodu": "SK0001",
+    "Stokadi": "Product 1",
+    "Marka": "Brand 1",
+    "Stok": "10",
+    "Listefiyati": 100,
+    "Doviz": "USD",
+    "Nakitiskontosu": 0.05,
+    "Tekcekimiskontosu": 0.1,
+    "Altitaksitiskontosu": 0.15,
+    "Acikhesapiskontosu": 0.2
+  },
+  {
+    "Gorsel": "https://example.com/image2.jpg",
+    "Stokkodu": "SK0002",
+    "Stokadi": "Product 2",
+    "Marka": "Brand 2",
+    "Stok": "5",
+    "Listefiyati": 50,
+    "Doviz": "USD",
+    "Nakitiskontosu": 0.05,
+    "Tekcekimiskontosu": 0.1,
+    "Altitaksitiskontosu": 0.15,
+    "Acikhesapiskontosu": 0.2
+  }
+]

@@ -1,0 +1,445 @@
+﻿@model List<ProductModel>
+<!-- jQuery library -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        
+
+    
+  </style>
+
+    <style>
+
+    .card-body {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    th, td {
+        padding: 8px;
+        text-align: center;
+        border: 1px solid #ddd;
+    }
+
+    th {
+        background-color: #f2f2f2;
+    }
+
+    tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+
+    tr:hover {
+        background-color: #ddd;
+    }
+
+    td img {
+        max-width: 100%;
+        max-height: 100%;
+    }
+
+    #quantitys {
+        appearance: auto;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        
+    }
+
+    #quantity {
+        appearance: auto;
+        width: 40px;
+        text-align: center;
+        margin: 0 8px;
+    }
+
+    .btn-number {
+        background-color: #f2f2f2;
+        border: none;
+        color: #555;
+        padding: 6px 10px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: all 0.2s ease-in-out;
+    }
+
+        .btn-number:hover {
+            background-color: #ddd;
+        }
+
+        .btn-number:active {
+            transform: scale(0.95);
+        }
+     /* Telefon ekranları için */
+        @@media only screen and (max-width: 767px) {
+            /* Tüm tablo satırları */
+            table#example1 tbody tr {
+                display: block;
+                margin-bottom: 10px;
+                border: 0 1px;
+            }
+            /* Tablo hücreleri */
+            table#example1 tbody td {
+                display: block;
+                text-align: center;
+            }
+                /* Detay butonu */
+                table#example1 tbody td:last-child {
+                    text-align: center;
+                }
+            /* Miktar düzenleme alanı */
+            #quantitys {
+                margin: auto;
+                text-align: center;
+            }
+            /* Miktar düzenleme butonları */
+            #minus-btn, #plus-btn {
+                display: inline-block;
+                vertical-align: middle;
+                margin: 0 5px;
+                padding: 3px 7px;
+                font-size: 20px;
+                font-weight: bold;
+                color: #007bff;
+                background-color: #fff;
+                border: 1px solid #007bff;
+                border-radius: 3px;
+            }
+            /* Miktar düzenleme alanı sayısal değeri */
+            #quantity {
+                display: inline-block;
+                width: 50px;
+                height: 30px;
+                text-align: center;
+                font-size: 16px;
+                font-weight: bold;
+                color: #007bff;
+                background-color: #fff;
+                border: 1px solid #007bff;
+                border-radius: 3px;
+            }
+            /* Tablo başlığı */
+            table#example1 thead {
+                display: none;
+
+            }
+
+            table#example1 tbody td:nth-child(1),
+            table#example1 tbody td:nth-child(7),
+            table#example1 tbody td:nth-child(8),
+            table#example1 tbody td:nth-child(9),
+            table#example1 tbody td:nth-child(10) {
+                display: none;
+            }
+            /* Sadece belirtilen hücreler */
+            table#example1 tbody td:nth-child(3),
+            table#example1 tbody td:nth-child(6),
+            table#example1 tbody td:nth-child(11),
+            table#example1 tbody td:last-child {
+                display: block;
+            }
+                /* bazı hücrelerin etiketleri */
+                table#example1 tbody td:nth-child(2)::before {
+                    content: "Stok Kodu: ";
+                    font-weight: bold;
+                }
+                table#example1 tbody td:nth-child(3)::before {
+                    content: "Stok Adı: ";
+                    font-weight: bold;
+                }
+
+                table#example1 tbody td:nth-child(4)::before {
+                    content: "Marka: ";
+                    font-weight: bold;
+                }
+
+                table#example1 tbody td:nth-child(5)::before {
+                    content: "Stok : ";
+                    font-weight: bold;
+                }
+
+                table#example1 tbody td:nth-child(6)::before {
+                    content: "Liste Fiyatı: ";
+                    font-weight: bold;
+                }
+                table#example1 tbody td:nth-child(7)::before {
+                content: "Nakit İ. : ";
+                    font-weight: bold;
+                }
+                table#example1 tbody td:nth-child(8)::before {
+                    content: "Tekçekim İ. : ";
+                    font-weight: bold;
+                }
+                table#example1 tbody td:nth-child(9)::before {
+                content: "Altı Taksit İ. : ";
+                    font-weight: bold;
+                }
+                table#example1 tbody td:nth-child(10)::before {
+                    content: "Açık Hesap İ. : ";
+                    font-weight: bold;
+                }
+
+                table#example1 tbody td:last-child::before {
+                    content: "";
+                }
+        }
+</style>
+  <style>
+    /* Burada diğer stiller var */
+    
+    /* Modal container */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1;
+      padding-top: 100px;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0, 0, 0, 0.4);
+    }
+
+    /* Modal content */
+    .modal-content {
+      margin: auto;
+      padding: 20px;
+      border: 1px solid #888;
+      width: 80%;
+      max-width: 600px;
+      background-color: #fff;
+      position: relative;
+    }
+
+    /* Modal header */
+    .modal-header {
+      background-color: #007bff;
+      color: #fff;
+      text-align: center;
+      padding: 10px;
+      position: relative;
+    }
+
+    /* Close button */
+    .close {
+      color: #fff;
+      font-size: 25px;
+      font-weight: bold;
+      position: absolute;
+      top: 5px;
+      right: 10px;
+      cursor: pointer;
+    }
+
+    /* Modal body */
+    .modal-body {
+      padding: 10px;
+    }
+
+    /* Modal footer */
+    .modal-footer {
+      text-align: right;
+      padding: 10px;
+      background-color: #f5f5f5;
+    }
+    
+  </style>
+</head>
+
+<div class="card-body">
+
+
+    <table id="example1" class="table table-bordered table-striped">
+
+        <thead>
+            <tr>
+                    <th>Görsel</th>
+                    <th>Stok Kodu</th>
+                    <th>Stok Adi</th>
+                    <th>Marka</th>
+                    <th>Stok</th>
+                    <th>Liste Fiyati</th>
+                    <th>Nakit İskontosu</th>
+                    <th>Tekçekim İskontosu</th>
+                    <th>Altı Taksit İskontosu</th>
+                    <th>Açık Hesap İskontosu</th>
+                    <th>Miktar</th>
+                    <th>İşlem</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr data-productid="@item.Stokkodu">
+                    <td> <img @*src="@item.Gorsel"*@ alt="Ürün Görseli"></td>
+                    <td> @Html.DisplayFor(modelItem => item.Stokkodu)</td>
+                    <td> @Html.DisplayFor(modelItem => item.Stokadi) </td>
+                    <td> @Html.DisplayFor(modelItem => item.Marka) </td>
+                    <td> @Html.DisplayFor(modelItem => item.Stok) </td>
+                    <td> @Html.DisplayFor(modelItem => item.Listefiyati) <strong> @Html.DisplayFor(modelItem => item.Doviz) </strong>  </td>
+                    <td> @Html.DisplayFor(modelItem => item.Nakitiskontosu)</td>
+                    <td> @Html.DisplayFor(modelItem => item.Tekcekimiskontosu)</td>
+                    <td> @Html.DisplayFor(modelItem => item.Altitaksitiskontosu)</td>
+                    <td> @Html.DisplayFor(modelItem => item.Acikhesapiskontosu)</td>
+                    <td>
+
+                        <div id="quantitys">
+                            <button  class="btn btn-default btn-number" id="minus-btn">-</button>
+                            <input id="quantity" type="number" style="display: inline-block; -moz-appearance: textfield;" value="1">
+                            <button  class="btn btn-default btn-number" id="plus-btn">+</button>
+                            </div>
+                        
+                    </td>
+                    
+                    <td>
+                        <button id="myBtn" type="button" class="btn btn-info btn-block btn-flat bg-info" data-toggle="modal" data-target="myModal-@item.Stokkodu">
+                            <i class="fas fa-play"></i>Detay
+                        </button>
+                    </td>
+                    
+                </tr>
+                <!-- The Modal -->
+                <div data-id="modal-@item.Stokkodu" id="myModal-@item.Stokkodu" class="modal">
+
+                    <!-- Modal content -->
+                    <div class="modal-content">
+                        <!-- Modal Header -->
+                        <div class="modal-header" style="background-color: #007bff;">
+                            <h4 class="modal-title text-light">Ürün Detay</h4>
+                            <span class="close">&times;</span>
+                        </div>
+                        <!-- Modal Body -->
+                        <div>
+                        @*<span class="close">&times;</span> *@
+                        <label for="productName">Ürün Görsel</label><br>
+                        <img src="@item.Gorsel" alt="Ürün Görseli"><br>
+                        <label for="productName">Ürün Adı</label><br>
+                        <input type="text" id="fname" name="fname"readonly value="@Html.DisplayFor(modelItem => item.Stokadi)"><br>
+                        <label for="productPrice">Ürün Fiyatı</label><br>
+                        <input type="text" id="lname" name="lname" readonly value="@Html.DisplayFor(modelItem => item.Listefiyati) @Html.DisplayFor(modelItem => item.Doviz)"><br>
+                        <label for="productBrand">Ürün Markası</label><br>
+                        <input type="text" id="lname" name="lname" readonly value="@Html.DisplayFor(modelItem => item.Marka)">
+                        </div>
+                    <!-- Modal footer -->
+                    <div class="modal-footer">
+                            <span class="closebutton"><button type="button" id="close" class="btn btn-secondary">Kapat</button></span>
+                    </div>
+
+                    </div>
+                </div>
+            }
+        </tbody>
+    </table>
+
+    
+</div>
+
+
+ <script>
+    var tableRows = document.querySelectorAll("#example1 tbody tr");
+    
+    tableRows.forEach(function (row) {
+        var quantityInput = row.querySelector('#quantity');
+        var plusButton = row.querySelector('#plus-btn');
+        var minusButton = row.querySelector('#minus-btn');
+
+        plusButton.addEventListener('click', function () {
+            quantityInput.value++;
+        });
+
+        minusButton.addEventListener('click', function () {
+            quantityInput.value--;
+            if (quantityInput.value < 1) {
+                quantityInput.value = 1;
+            }
+        });
+    });
+</script>
+ <script>
+    var button1 = document.getElementsByClassName("btn"); 
+    // Get the modal
+    var modala = document.getElementById("myModal");
+    var modals = document.getElementsByClassName("modal");
+
+    Object.keys(button1).map(function (key) {
+        var button = button1[key]
+        button.addEventListener("click", function () {
+            var getIdFromRow = $(event.target).closest('button').data('target'); //get the id from button
+            var modal = document.getElementById(getIdFromRow);
+            modal.style.display = "block";
+
+
+            // Get all close buttons in a collection
+            var spans = document.getElementsByClassName("close");
+
+            // Loop through the collection and add events to each close button
+            for (var i = 0; i < spans.length; i++) {
+                var span = spans[i];
+                span.onclick = function () {
+                    modal.style.display = "none";
+                };
+            }
+            // Get all closebutton buttons in a collection
+            var closeButtons = document.getElementsByClassName("closebutton");
+
+            // Loop through the collection and add events to each closebutton button
+            for (var i = 0; i < closeButtons.length; i++) {
+                var closeButton = closeButtons[i];
+                closeButton.onclick = function () {
+                    modal.style.display = "none";
+                };
+            }
+            // When the user clicks anywhere outside of the modal, close it
+            window.onclick = function (event) {
+                if (event.target == modal) {
+                    modal.style.display = "none";
+                }
+            }
+            
+        });
+        
+    });
+    //var getIdFromRow = $(event.target).closest('tr').data('id'); //get the id from tr
+    // Get the <span> element that closes the modal
+    
+</script>
+
+@*<script>
+    var btns = document.querySelectorAll("myBtn");
+    // Get the modal
+    var modal = document.getElementById("myModal");
+
+    // Get the button that opens the modal
+    var btn = document.getElementById("myBtn");
+    //var getIdFromRow = $(event.target).closest('tr').data('id'); //get the id from tr
+    // Get the <span> element that closes the modal
+    var span = document.getElementsByClassName("close")[0];
+    tableRows.forEach(function (row) {
+    // When the user clicks on the button, open the modal
+    btn.onclick = function () {
+        modal.style.display = "block";
+    }
+
+    // When the user clicks on <span> (x), close the modal
+    span.onclick = function () {
+        modal.style.display = "none";
+    }
+
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function (event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
+    });
+</script>
+*@
